@@ -11,33 +11,39 @@ function App() {
   const [orders, setOrders] = useState([]);
   const [text, setText] = useState("Blockonomics helps you to track and accept Bitcoin payments");
   const [price, setPrice] = useState("12.00");
+  const [value, setValue] = useState(1);
+
+  const FilterData = () => {
+
+    let max = 0;
+    let index = 0;
+    for (let i = 0; i < orders.length; i++) {
+
+      if (orders[i].status === 2) {
+        if (parseInt(orders[i].data.amount) > parseInt(max)) {
+          max = parseInt(orders[i].data.amount);
+          index = i;
+        }
+      }
+    }
+
+    setText(orders[index].data["Text"]);
+    setPrice(orders[index].data.amount);
+  }
 
   useEffect(() => {
     axios.get('/orders')
       .then(response => {
         console.log(response.data);
         setOrders(response.data);
+        FilterData();
       })
       .catch(error => {
         console.log(error);
       });
-      
-      // let max = 0;
-      // let index = 0;
-      // for (let i = 0; i < orders.length; i++) {
-      //   console.log("orders" + orders);
-      //   if (orders[i].status === 2) {
-      //     if (parseInt(orders[i].data.amount) > parseInt(max)) {
-      //       max = parseInt(orders[i].data.amount);
-      //       index = i;
-      //     }
-      //   }
-      // }
 
-      // setText(orders[index].data[2]);
-      // setPrice(orders[index].data.amount);
+   }, [FilterData]);
 
-  }, []);
 
 
   // have database that have all the payments, with two columns amount and text
