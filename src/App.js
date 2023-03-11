@@ -11,7 +11,7 @@ function App() {
   // useState fields to store the list of orders, the billboard text, and the current price
   const [orders, setOrders] = useState([]);
   const [text, setText] = useState("Blockonomics helps you to track and accept Bitcoin payments");
-  const [price, setPrice] = useState("12.00");
+  const [price, setPrice] = useState("0");
 
   // this function takes the current list of orders, selects the highest paid order, and sets the current price and current text 
   // to that of the highest order
@@ -21,7 +21,6 @@ function App() {
     let max = 0;
     let index = 0;
     for (let i = 0; i < orders.length; i++) {
-
       if (orders[i].status === 2) {
         if (parseInt(orders[i].data.amount) > parseInt(max)) {
           max = parseInt(orders[i].data.amount);
@@ -34,9 +33,9 @@ function App() {
     setPrice(orders[index].data.amount);
   }
 
-  // everytime the page re-renders, get list of all orders made to the wallet through '/orders' end point in axios 
+  // press the page logo to refresh the page, which gets list of all orders made to the wallet through '/orders' end point in axios 
   // once it fetches the new list of orders, call FilterData() to set new price and text
-  useEffect(() => {
+   const refreshPage = () => {
     axios.get('/orders')
       .then(response => {
         console.log(response.data);
@@ -46,15 +45,15 @@ function App() {
       .catch(error => {
         console.log(error);
       });
-
-   }, [FilterData]);
+   }
 
   // this is the page
   // we use the react BitcoinPaymentButton package 
   return (
     <div className="App">
       <div className="Header">
-        <img src={logo} className ="logo"/>
+
+        <img src={logo} className ="logo" onClick={refreshPage}/>
         <p className = "bText">Billboard</p>
       </div>
       <div className = "Body">
@@ -70,7 +69,7 @@ function App() {
           <p className = 'moneyText'>{price} USD</p>
           <p className = "featureText">want to be featured on this billboard?</p>
           <BitcoinPaymentButton 
-            uid="94e4215dcff746f8"
+            uid="20b37fd24b0848f3"
             imageURL={button}
             font="Roboto, Helvetica, Arial, sans-serif"
             backgroundColor="#131a22"
