@@ -8,11 +8,14 @@ import axios from 'axios';
 
 function App() {
 
+  // useState fields to store the list of orders, the billboard text, and the current price
   const [orders, setOrders] = useState([]);
   const [text, setText] = useState("Blockonomics helps you to track and accept Bitcoin payments");
   const [price, setPrice] = useState("12.00");
-  const [value, setValue] = useState(1);
 
+  // this function takes the current list of orders, selects the highest paid order, and sets the current price and current text 
+  // to that of the highest order
+  // order status must be completed to be considered
   const FilterData = () => {
 
     let max = 0;
@@ -31,6 +34,8 @@ function App() {
     setPrice(orders[index].data.amount);
   }
 
+  // everytime the page re-renders, get list of all orders made to the wallet through '/orders' end point in axios 
+  // once it fetches the new list of orders, call FilterData() to set new price and text
   useEffect(() => {
     axios.get('/orders')
       .then(response => {
@@ -44,16 +49,8 @@ function App() {
 
    }, [FilterData]);
 
-
-
-  // have database that have all the payments, with two columns amount and text
-  // useEffect finds text correlated to the greatest paid amound, and displays that text, as well as that amount to the website
-
-  // todo: after the payment, put payment info to database
-  //       useEffect that fetches information correlated to the highest payment in the database
-  //       display that info to the webpage
-
-
+  // this is the page
+  // we use the react BitcoinPaymentButton package 
   return (
     <div className="App">
       <div className="Header">
